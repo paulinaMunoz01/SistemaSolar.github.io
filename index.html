@@ -1,0 +1,91 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  </head>
+  <body>
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind;"
+             vr-mode-ui="enabled: false"
+             device-orientation-permission-ui="enabled: false">
+             
+      <!-- Cargamos todos los modelos aquí -->
+      <a-assets>
+        <a-asset-item id="merc" src="mercury.glb"></a-asset-item>
+        <a-asset-item id="venus" src="venus.glb"></a-asset-item>
+        <a-asset-item id="earth" src="earth.glb"></a-asset-item>
+        <a-asset-item id="moon" src="moon.glb"></a-asset-item>
+        <a-asset-item id="mars" src="mars.glb"></a-asset-item>
+        <a-asset-item id="jupiter" src="jupiter.glb"></a-asset-item>
+        <a-asset-item id="saturn" src="saturn.glb"></a-asset-item>
+        <a-asset-item id="uranus" src="uranus.glb"></a-asset-item>
+        <a-asset-item id="neptune" src="neptune.glb"></a-asset-item>
+        <a-asset-item id="sun" src="sun.glb"></a-asset-item>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity mindar-image-target="targetIndex: 0">
+        <!-- Sol -->
+        <a-gltf-model src="#sun" position="0 0 -0.1" scale="0.006 0.006 0.006"></a-gltf-model>
+
+        <!-- Órbitas -->
+        <a-torus radius="0.30" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
+        <a-torus radius="0.38" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
+        <a-torus radius="0.47" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
+        <a-torus radius="0.57" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
+        <a-torus radius="0.68" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
+        <a-torus radius="0.80" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
+        <a-torus radius="0.93" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
+        <a-torus radius="1.07" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
+
+        <!-- Mercurio -->
+        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 6000; easing: linear;">
+          <a-gltf-model src="#merc" position="0.30 0 0" scale="0.04 0.04 0.04"></a-gltf-model>
+        </a-entity>
+
+        <!-- Venus -->
+        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 7200; easing: linear;">
+          <a-gltf-model src="#venus" position="0.38 -.03 0" scale="0.001 0.001 0.001"></a-gltf-model>
+        </a-entity>
+
+        <!-- Tierra y Luna -->
+        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 8400; easing: linear;">
+          <a-gltf-model src="#earth" position="0.47 -.03 0" scale="0.0017 0.0017 0.0017"></a-gltf-model>
+
+          <a-entity position="0.47 0 0"
+                    animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear;">
+            <a-gltf-model src="#moon" position="0.08 0.015 0" scale="0.0004 0.0004 0.0004"></a-gltf-model>
+          </a-entity>
+        </a-entity>
+
+        <!-- Marte -->
+        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 9600; easing: linear;">
+          <a-gltf-model src="#mars" position="0.57 0 0" scale="0.05 0.05 0.05"></a-gltf-model>
+        </a-entity>
+
+        <!-- Júpiter -->
+        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 10800; easing: linear;">
+          <a-gltf-model src="#jupiter" position="0.68 -.05 0" scale="0.0015 0.0015 0.0015"></a-gltf-model>
+        </a-entity>
+
+        <!-- Saturno con anillos -->
+        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear;">
+          <a-entity position="0.80 0 0">
+            <a-gltf-model src="#saturn" scale="0.015 0.015 0.015"></a-gltf-model>
+          </a-entity>
+        </a-entity>
+
+        <!-- Urano -->
+        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 13200; easing: linear;">
+          <a-gltf-model src="#uranus" position="0.93 0 0" scale="0.013 0.013 0.013"></a-gltf-model>
+        </a-entity>
+
+        <!-- Neptuno -->
+        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 14400; easing: linear;">
+          <a-gltf-model src="#neptune" position="1.07 0 0" scale="0.009 0.009 0.009"></a-gltf-model>
+        </a-entity>
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
