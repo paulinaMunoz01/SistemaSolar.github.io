@@ -17,8 +17,11 @@ Funcionalidades implementadas
 - Interfaz web funcional accesible desde navegadores.
 
 CREDITOS
+
 Modelos 3D
+
 En este proyecto se utilizaron modelos 3D de distintas fuentes:
+
 Modelos creados por mí:
 - Mercurio
 - Marte
@@ -26,6 +29,7 @@ Modelos creados por mí:
 - Urano
 - Neptuno
 Otros elementos adicionales del sistema solar
+
 Modelos obtenidos de Poly Pizza:
 - Sol: Sun by Poly by Google [CC-BY] via Poly Pizza
 - Tierra: Earth by Poly by Google [CC-BY] via Poly Pizza
