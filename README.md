@@ -5,7 +5,7 @@ Este proyecto consiste en una visualización interactiva del sistema solar utili
 Tecnologías utilizadas
 - A-Frame (framework de desarrollo 3D para web)
 - HTML5
-- JavaScript (Toda sin integrar)
+- JavaScript
 - Modelos 3D en formato glTF / OBJ / etc.
 - GitHub Pages (para publicación/pruebas)
 
@@ -15,6 +15,9 @@ Funcionalidades implementadas
 - Rotación de los planetas sobre su propio eje.
 - Implementación básica de órbitas.
 - Interfaz web funcional accesible desde navegadores.
+- Interaccion táctil/click (Visualizacion de datos).
+- Zoom individual (Al hacer click o tocar un planeta crece en tamaño).
+- Control de animación (Boton de pausa).
 
 CREDITOS
 
