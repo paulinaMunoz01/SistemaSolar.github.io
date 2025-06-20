@@ -1,5 +1,5 @@
 <html>
-  <head> 
+  <head> <!-- o incluso que el texto hable con una voz generada (sí, se puede con Web Speech API) posible cambio -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -247,10 +247,13 @@ AFRAME.registerComponent("planet-interaction", {
         <a-asset-item id="n" src="neptune.glb"></a-asset-item>
         <a-asset-item id="sun" src="sun.glb"></a-asset-item>
       </a-assets>
+
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
       <a-entity mindar-image-target="targetIndex: 0" toggle-animations planet-interaction>
         <!-- Sol -->
         <a-gltf-model id="sol" src="#sun" position="0 0 -0.1" scale="0.006 0.006 0.006"></a-gltf-model>
+
         <!-- Órbitas -->
         <a-torus radius="0.30" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
         <a-torus radius="0.38" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
@@ -260,47 +263,58 @@ AFRAME.registerComponent("planet-interaction", {
         <a-torus radius="0.80" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
         <a-torus radius="0.93" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
         <a-torus radius="1.07" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
+
         <!-- Mercurio -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 6000; easing: linear;">
           <a-gltf-model id="mercurio" src="#merc" position="0.30 0 0" scale="0.04 0.04 0.04"></a-gltf-model>
         </a-entity>
+
         <!-- Venus -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 7200; easing: linear;">
           <a-gltf-model id="venus" src="#v" position="0.38 -.03 0" scale="0.001 0.001 0.001"></a-gltf-model>
         </a-entity>
+
         <!-- Tierra y Luna -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 8400; easing: linear;">
           <a-gltf-model id="tierra" src="#e" position="0.47 -.05 0" scale="0.0045 0.0045 0.0045"></a-gltf-model>
+
           <a-entity position="0.47 0 0"
                     animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear;">
             <a-gltf-model id="moon" src="#luna" position="0.08 0.015 0" scale="0.0005 0.0005 0.0005"></a-gltf-model>
           </a-entity>
         </a-entity>
+
         <!-- Marte -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 9600; easing: linear;">
           <a-gltf-model  id="mars"src="#marte" position="0.57 0 0" scale="0.007 0.007 0.007"></a-gltf-model>
         </a-entity>
+
         <!-- Júpiter -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 10800; easing: linear;">
           <a-gltf-model id="jupiter" src="#j" position="0.68 -.05 0" scale="0.0015 0.0015 0.0015"></a-gltf-model>
         </a-entity>
-        <!-- Saturno -->
+
+        <!-- Saturno con anillos -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear;">
           <a-entity position="0.80 0 0">
             <a-gltf-model id="saturn" src="#s" scale="0.015 0.015 0.015"></a-gltf-model>
           </a-entity>
         </a-entity>
+
         <!-- Urano -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 13200; easing: linear;">
           <a-gltf-model id="uranus" src="#u" position="0.93 0 0" scale="0.013 0.013 0.013"></a-gltf-model>
         </a-entity>
+
         <!-- Neptuno -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 14400; easing: linear;">
           <a-gltf-model id="neptune" src="#n" position="1.07 0 0" scale="0.009 0.009 0.009"></a-gltf-model>
         </a-entity>
       </a-entity>
+
   <!-- 🎬 Contenedor para planeta ampliado -->
   <a-entity id="zoom-stage" visible="false" position="0 0 0"></a-entity>
+      
     </a-scene>
   </body>
 </html>
