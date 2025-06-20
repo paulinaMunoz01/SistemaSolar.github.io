@@ -1,10 +1,235 @@
 <html>
-  <head>
+  <head> 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+  #toggleButton {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 999;
+    width: 80px;
+    height: 80px;
+    font-size: 50px;
+    background: rgba(0, 0, 0, 0.336); /* negro con transparencia */
+    color: white;
+    border:2px solid white;
+    border-radius: 50%; /* borde redondo */
+    cursor: pointer;
+  }
+</style>
+<script>
+
+  AFRAME.registerComponent("self-rotate", {
+  schema: { speed: { type: "number", default: 40 } },
+  tick: function (t, dt) {
+    if (!this.el.object3D.visible) return;
+    const degToRad = AFRAME.THREE.MathUtils.degToRad;
+    this.el.object3D.rotation.y += degToRad(this.data.speed) * (dt / 1000);
+  }
+});
+
+AFRAME.registerComponent("planet-interaction", {
+  init: function () {
+    const scene = this.el.sceneEl;
+    const canvas = scene.renderer.domElement;
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    const zoomStage = scene.querySelector("#zoom-stage");
+    const markerRoot = this.el;
+
+    const planetData = {
+      sol: {
+        model: "#sun",
+        scale: ".2 .2 .2",
+        position: "0 0 -30",
+        info: `Sol: Estrella central del sistema solar.
+            Diámetro: 1,392,700 km.
+            Fuente principal de luz y energía.
+            Fun fact: ¡Puede contener más de un millon de Tierras!`
+      },
+      moon: {
+        model: "#luna",
+        scale: ".13 .13 .13",
+        position: "0 -5 -30",
+        info: `Luna:  Satélite natural de la Tierra. 
+        Diámetro: 3,474 km. 
+        Distancia a la Tierra: 384,400 km. 
+        Fun fact: Siempre muestra la misma cara.`
+      },
+      mercurio: {
+        model: "#merc",
+        scale: "5 5 5",
+        position: "0 0 -30",
+        info: `Mercurio: Planeta más cercano al Sol. 
+        Diámetro: 4,879 km. 
+        Distancia al Sol: 57.9 millones de km. 
+        Fun fact: Su día es más largo que su año `
+      },
+      venus: {
+        model: "#v",
+        scale: ".22 .22 .22",
+        position: "0 -6.2 -40",
+        info: `Venus:  Similar en tamaño a la Tierra. 
+        Diámetro: 12,104 km. 
+        Distancia al Sol: 108.2 millones de km.
+        Fun fact: Gira en sentido contrario a la mayoría `
+      },
+      tierra: {
+        model: "#e",
+        scale: ".6 .6 .6",
+        position: "0 -8.5 -50",
+        info: `Tierra: Único planeta con vida. 
+        Diámetro: 12,742 km. 
+        Distancia al Sol: 149.6 millones de km. 
+        Fun fact: El 70% de su superficie es agua`
+      },
+      mars: {
+        model: "#marte",
+        scale: ".5 .5 .5",
+        position: "0 0 -25",
+        info: `Marte:  Llamado el planeta rojo. 
+        Diámetro: 6,779 km. 
+        Distancia al Sol: 227.9 millones de km.
+        Fun fact: Tiene el volcán más grande del sistema solar`
+      },
+      jupiter: {
+        model: "#j",
+        scale: ".17 .17 .17",
+        position: "0 -7 -50",
+        info: `Jupiter: El mas grande del sistema solar.
+        Diámetro: 139,820 km.
+        Distancia al Sol: 778.5 millones de km.
+        Fun fact: Su Gran Mancha Roja es una enorme tormenta`
+      },
+      saturn: {
+        model: "#s",
+        scale: ".7 .7 .7",
+        position: "0 0 -30",
+        info: `Saturno: Famoso por sus anillos. 
+        Diámetro: 116,460 km. 
+        Distancia al Sol: 1,429 millones de km. 
+        Fun fact: Flotaría en un océano gigante`
+      },
+      uranus: {
+        model: "#u",
+        scale: ".45 .45 .45",
+        position: "0 0 -20",
+        info: `Urano:  Gigante helado azul verdoso. 
+        Diámetro: 50,724 km. 
+        Distancia al Sol: 2,871 millones de km. 
+        Fun fact: Rota casi de lado`
+      },
+      neptune: {
+        model: "#n",
+        scale: ".52 .52 .52",
+        position: "0 0 -20",
+        info: `Mercurio: Planeta más lejano. 
+        Diámetro: 49,244 km. 
+        Distancia al Sol: 4,495 millones de km. 
+        Fun fact: Tiene los vientos más rápidos registrados`
+      }
+    };
+
+    let zoomed = false;
+
+    function enterZoomView({ model, scale, position, info }) {
+      if (!model || !scale || !position || typeof model !== "string") {
+        console.warn("Datos inválidos al hacer zoom:", { model, scale, position });
+        return;
+      }
+
+      const scaleVals = scale.split(" ").map(Number);
+      const posVals = position.split(" ").map(Number);
+      if (scaleVals.some(isNaN) || posVals.some(isNaN)) {
+        console.warn("Valores mal formateados en scale o position:", { scale, position });
+        return;
+      }
+
+      const planet = document.createElement("a-entity");
+      planet.setAttribute("gltf-model", model);
+      planet.setAttribute("scale", scale);
+      planet.setAttribute("position", position);
+      planet.setAttribute("self-rotate", "speed: 40");
+
+      const label = document.createElement("a-entity");
+      label.setAttribute("text", {
+        value: info || "Información no disponible.",
+        align: "center",
+        width: 3,
+        color: "#FFD700",
+        wrapCount: 25
+      });
+      label.setAttribute("position", "0 3.5 -12");
+      label.setAttribute("geometry", "primitive: plane; height: 1.7; width: 4.2;");
+      label.setAttribute("material", "color: #111; opacity: 0.75; side: double; transparent: true");
+
+      const container = document.createElement("a-entity");
+      container.appendChild(planet);
+      container.appendChild(label);
+
+      zoomStage.appendChild(container);
+      zoomStage.setAttribute("visible", true);
+      markerRoot.setAttribute("visible", false);
+    }
+
+    function exitZoomView() {
+      zoomStage.innerHTML = "";
+      zoomStage.setAttribute("visible", false);
+      markerRoot.setAttribute("visible", true);
+      scene.object3D.updateMatrixWorld(true);
+    }
+
+    canvas.addEventListener("click", (event) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouse, scene.camera);
+
+      if (zoomed) {
+        exitZoomView();
+        zoomed = false;
+        return;
+      }
+
+      Object.keys(planetData).forEach((id) => {
+        const original = scene.querySelector("#" + id);
+        if (!original || !original.getObject3D("mesh")) return;
+
+        const intersects = raycaster.intersectObject(original.getObject3D("mesh"), true);
+        if (intersects.length === 0) return;
+
+        const { model, scale, position, info } = planetData[id];
+        setTimeout(() => {
+          enterZoomView({ model, scale, position, info });
+          zoomed = true;
+        }, 50); // Le damos tiempo al modelo para asegurar carga
+      });
+    });
+  }
+});
+
+  AFRAME.registerComponent("toggle-animations", {
+    init: function () {
+      const btn = document.getElementById("toggleButton");
+      const animated = this.el.querySelectorAll("[animation]");
+      let paused = false;
+      btn.addEventListener("click", () => {
+        paused = !paused;
+        btn.textContent = paused ? ">" : "=";
+        animated.forEach(el => {
+          const comp = el.components.animation;
+          if (comp && comp.animation) paused ? comp.pause() : comp.play();
+        });
+      });
+    }
+  });
+</script>
   </head>
   <body>
+    <button id="toggleButton">=</button>
     <a-scene mindar-image="imageTargetSrc: ./targets.mind;"
              vr-mode-ui="enabled: false"
              device-orientation-permission-ui="enabled: false">
@@ -12,23 +237,20 @@
       <!-- Cargamos todos los modelos aquí -->
       <a-assets>
         <a-asset-item id="merc" src="mercury.glb"></a-asset-item>
-        <a-asset-item id="venus" src="venus.glb"></a-asset-item>
-        <a-asset-item id="earth" src="earth.glb"></a-asset-item>
-        <a-asset-item id="moon" src="moon.glb"></a-asset-item>
-        <a-asset-item id="mars" src="mars.glb"></a-asset-item>
-        <a-asset-item id="jupiter" src="jupiter.glb"></a-asset-item>
-        <a-asset-item id="saturn" src="saturn.glb"></a-asset-item>
-        <a-asset-item id="uranus" src="uranus.glb"></a-asset-item>
-        <a-asset-item id="neptune" src="neptune.glb"></a-asset-item>
+        <a-asset-item id="v" src="venus.glb"></a-asset-item>
+        <a-asset-item id="e" src="earth.glb"></a-asset-item>
+        <a-asset-item id="luna" src="moon.glb"></a-asset-item>
+        <a-asset-item id="marte" src="mars.glb"></a-asset-item>
+        <a-asset-item id="j" src="jupiter.glb"></a-asset-item>
+        <a-asset-item id="s" src="saturn.glb"></a-asset-item>
+        <a-asset-item id="u" src="uranus.glb"></a-asset-item>
+        <a-asset-item id="n" src="neptune.glb"></a-asset-item>
         <a-asset-item id="sun" src="sun.glb"></a-asset-item>
       </a-assets>
-
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
-      <a-entity mindar-image-target="targetIndex: 0">
+      <a-entity mindar-image-target="targetIndex: 0" toggle-animations planet-interaction>
         <!-- Sol -->
-        <a-gltf-model src="#sun" position="0 0 -0.1" scale="0.006 0.006 0.006"></a-gltf-model>
-
+        <a-gltf-model id="sol" src="#sun" position="0 0 -0.1" scale="0.006 0.006 0.006"></a-gltf-model>
         <!-- Órbitas -->
         <a-torus radius="0.30" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
         <a-torus radius="0.38" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
@@ -38,54 +260,47 @@
         <a-torus radius="0.80" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
         <a-torus radius="0.93" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
         <a-torus radius="1.07" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
-
         <!-- Mercurio -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 6000; easing: linear;">
-          <a-gltf-model src="#merc" position="0.30 0 0" scale="0.04 0.04 0.04"></a-gltf-model>
+          <a-gltf-model id="mercurio" src="#merc" position="0.30 0 0" scale="0.04 0.04 0.04"></a-gltf-model>
         </a-entity>
-
         <!-- Venus -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 7200; easing: linear;">
-          <a-gltf-model src="#venus" position="0.38 -.03 0" scale="0.001 0.001 0.001"></a-gltf-model>
+          <a-gltf-model id="venus" src="#v" position="0.38 -.03 0" scale="0.001 0.001 0.001"></a-gltf-model>
         </a-entity>
-
         <!-- Tierra y Luna -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 8400; easing: linear;">
-          <a-gltf-model src="#earth" position="0.47 -.03 0" scale="0.0017 0.0017 0.0017"></a-gltf-model>
-
+          <a-gltf-model id="tierra" src="#e" position="0.47 -.05 0" scale="0.0045 0.0045 0.0045"></a-gltf-model>
           <a-entity position="0.47 0 0"
                     animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear;">
-            <a-gltf-model src="#moon" position="0.08 0.015 0" scale="0.0004 0.0004 0.0004"></a-gltf-model>
+            <a-gltf-model id="moon" src="#luna" position="0.08 0.015 0" scale="0.0005 0.0005 0.0005"></a-gltf-model>
           </a-entity>
         </a-entity>
-
         <!-- Marte -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 9600; easing: linear;">
-          <a-gltf-model src="#mars" position="0.57 0 0" scale="0.05 0.05 0.05"></a-gltf-model>
+          <a-gltf-model  id="mars"src="#marte" position="0.57 0 0" scale="0.007 0.007 0.007"></a-gltf-model>
         </a-entity>
-
         <!-- Júpiter -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 10800; easing: linear;">
-          <a-gltf-model src="#jupiter" position="0.68 -.05 0" scale="0.0015 0.0015 0.0015"></a-gltf-model>
+          <a-gltf-model id="jupiter" src="#j" position="0.68 -.05 0" scale="0.0015 0.0015 0.0015"></a-gltf-model>
         </a-entity>
-
-        <!-- Saturno con anillos -->
+        <!-- Saturno -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear;">
           <a-entity position="0.80 0 0">
-            <a-gltf-model src="#saturn" scale="0.015 0.015 0.015"></a-gltf-model>
+            <a-gltf-model id="saturn" src="#s" scale="0.015 0.015 0.015"></a-gltf-model>
           </a-entity>
         </a-entity>
-
         <!-- Urano -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 13200; easing: linear;">
-          <a-gltf-model src="#uranus" position="0.93 0 0" scale="0.013 0.013 0.013"></a-gltf-model>
+          <a-gltf-model id="uranus" src="#u" position="0.93 0 0" scale="0.013 0.013 0.013"></a-gltf-model>
         </a-entity>
-
         <!-- Neptuno -->
         <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 14400; easing: linear;">
-          <a-gltf-model src="#neptune" position="1.07 0 0" scale="0.009 0.009 0.009"></a-gltf-model>
+          <a-gltf-model id="neptune" src="#n" position="1.07 0 0" scale="0.009 0.009 0.009"></a-gltf-model>
         </a-entity>
       </a-entity>
+  <!-- 🎬 Contenedor para planeta ampliado -->
+  <a-entity id="zoom-stage" visible="false" position="0 0 0"></a-entity>
     </a-scene>
   </body>
 </html>
