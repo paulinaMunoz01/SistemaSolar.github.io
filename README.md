@@ -18,6 +18,7 @@ Funcionalidades implementadas
 - Interaccion táctil/click (Visualizacion de datos).
 - Zoom individual (Al hacer click o tocar un planeta crece en tamaño).
 - Control de animación (Boton de pausa).
+- Configuración e integración con marcador.
 
 CREDITOS
 
