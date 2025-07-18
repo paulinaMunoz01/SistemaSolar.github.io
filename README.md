@@ -26,6 +26,8 @@ Funcionalidades implementadas
 - Carga diferida con a-asset-item.
 - Reducción de peso de los modelos 3D.
 
+Nota: Mantener los modelos entre 100 KB y 2 MB como máximo permite asegurar una carga rápida, fluidez en la interacción y compatibilidad con una amplia variedad de dispositivos móviles, incluso aquellos de gama media o baja. Y los modelos que se utilizan actualmente ya se encuentran en ese rango de peso.
+
 CREDITOS
 
 Modelos 3D
