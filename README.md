@@ -19,6 +19,12 @@ Funcionalidades implementadas
 - Zoom individual (Al hacer click o tocar un planeta crece en tamaño).
 - Control de animación (Boton de pausa).
 - Configuración e integración con marcador.
+- Busqueda y corrección de errores.
+- Corrección de mensajes en los planetas.
+- Corrección de movimiento del sol.
+- Corrección de clic en dos planetas al mismo tiempo.
+- Carga diferida con a-asset-item.
+- Reducción de peso de los modelos 3D.
 
 CREDITOS
 
