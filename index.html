@@ -46,16 +46,16 @@ AFRAME.registerComponent("planet-interaction", {
         scale: ".2 .2 .2",
         position: "0 0 -30",
         info: `Sol: Estrella central del sistema solar.
-            Diámetro: 1,392,700 km.
-            Fuente principal de luz y energía.
-            Fun fact: ¡Puede contener más de un millon de Tierras!`
+            Diametro: 1,392,700 km.
+            Fuente principal de luz y energia.
+            Fun fact: ¡Puede contener mas de un millon de Tierras!`
       },
       moon: {
         model: "#luna",
         scale: ".13 .13 .13",
         position: "0 -5 -30",
-        info: `Luna:  Satélite natural de la Tierra. 
-        Diámetro: 3,474 km. 
+        info: `Luna: Satelite natural de la Tierra. 
+        Diametro: 3,474 km. 
         Distancia a la Tierra: 384,400 km. 
         Fun fact: Siempre muestra la misma cara.`
       },
@@ -63,26 +63,26 @@ AFRAME.registerComponent("planet-interaction", {
         model: "#merc",
         scale: "5 5 5",
         position: "0 0 -30",
-        info: `Mercurio: Planeta más cercano al Sol. 
-        Diámetro: 4,879 km. 
+        info: `Mercurio: Planeta mas cercano al Sol. 
+        Diametro: 4,879 km. 
         Distancia al Sol: 57.9 millones de km. 
-        Fun fact: Su día es más largo que su año `
+        Fun fact: Su rotacion tarda mas que su traslacion.`
       },
       venus: {
         model: "#v",
         scale: ".22 .22 .22",
         position: "0 -6.2 -40",
-        info: `Venus:  Similar en tamaño a la Tierra. 
-        Diámetro: 12,104 km. 
+        info: `Venus: Similar en dimensiones a la Tierra.
+        Diametro: 12,104 km. 
         Distancia al Sol: 108.2 millones de km.
-        Fun fact: Gira en sentido contrario a la mayoría `
+        Fun fact: Gira en sentido contrario a la mayoria`
       },
       tierra: {
         model: "#e",
         scale: ".6 .6 .6",
         position: "0 -8.5 -50",
-        info: `Tierra: Único planeta con vida. 
-        Diámetro: 12,742 km. 
+        info: `Tierra: Unico planeta con vida. 
+        Diametro: 12,742 km. 
         Distancia al Sol: 149.6 millones de km. 
         Fun fact: El 70% de su superficie es agua`
       },
@@ -90,17 +90,17 @@ AFRAME.registerComponent("planet-interaction", {
         model: "#marte",
         scale: ".5 .5 .5",
         position: "0 0 -25",
-        info: `Marte:  Llamado el planeta rojo. 
-        Diámetro: 6,779 km. 
+        info: `Marte: Llamado el planeta rojo. 
+        Diametro: 6,779 km. 
         Distancia al Sol: 227.9 millones de km.
-        Fun fact: Tiene el volcán más grande del sistema solar`
+        Fun fact: Tiene el volcan mas grande del sistema solar`
       },
       jupiter: {
         model: "#j",
         scale: ".17 .17 .17",
         position: "0 -7 -50",
         info: `Jupiter: El mas grande del sistema solar.
-        Diámetro: 139,820 km.
+        Diametro: 139,820 km.
         Distancia al Sol: 778.5 millones de km.
         Fun fact: Su Gran Mancha Roja es una enorme tormenta`
       },
@@ -109,16 +109,16 @@ AFRAME.registerComponent("planet-interaction", {
         scale: ".7 .7 .7",
         position: "0 0 -30",
         info: `Saturno: Famoso por sus anillos. 
-        Diámetro: 116,460 km. 
+        Diametro: 116,460 km. 
         Distancia al Sol: 1,429 millones de km. 
-        Fun fact: Flotaría en un océano gigante`
+        Fun fact: Flotaria en un oceano gigante`
       },
       uranus: {
         model: "#u",
         scale: ".45 .45 .45",
         position: "0 0 -20",
-        info: `Urano:  Gigante helado azul verdoso. 
-        Diámetro: 50,724 km. 
+        info: `Urano: Gigante helado azul verdoso. 
+        Diametro: 50,724 km. 
         Distancia al Sol: 2,871 millones de km. 
         Fun fact: Rota casi de lado`
       },
@@ -126,10 +126,10 @@ AFRAME.registerComponent("planet-interaction", {
         model: "#n",
         scale: ".52 .52 .52",
         position: "0 0 -20",
-        info: `Mercurio: Planeta más lejano. 
-        Diámetro: 49,244 km. 
+        info: `Neptuno: Planeta mas lejano. 
+        Diametro: 49,244 km. 
         Distancia al Sol: 4,495 millones de km. 
-        Fun fact: Tiene los vientos más rápidos registrados`
+        Fun fact: Tiene los vientos mas rapidos registrados`
       }
     };
 
@@ -152,7 +152,9 @@ AFRAME.registerComponent("planet-interaction", {
       planet.setAttribute("gltf-model", model);
       planet.setAttribute("scale", scale);
       planet.setAttribute("position", position);
-      planet.setAttribute("self-rotate", "speed: 40");
+      if (model !== "#sun") {
+        planet.setAttribute("self-rotate", "speed: 40");
+      }
 
       const label = document.createElement("a-entity");
       label.setAttribute("text", {
@@ -205,7 +207,7 @@ AFRAME.registerComponent("planet-interaction", {
         setTimeout(() => {
           enterZoomView({ model, scale, position, info });
           zoomed = true;
-        }, 50); // Le damos tiempo al modelo para asegurar carga
+        }, 50);
       });
     });
   }
@@ -218,7 +220,7 @@ AFRAME.registerComponent("planet-interaction", {
       let paused = false;
       btn.addEventListener("click", () => {
         paused = !paused;
-        btn.textContent = paused ? ">" : "=";
+        btn.textContent = paused ? ">" : "II";
         animated.forEach(el => {
           const comp = el.components.animation;
           if (comp && comp.animation) paused ? comp.pause() : comp.play();
@@ -229,7 +231,7 @@ AFRAME.registerComponent("planet-interaction", {
 </script>
   </head>
   <body>
-    <button id="toggleButton">=</button>
+    <button id="toggleButton">II</button>
     <a-scene mindar-image="imageTargetSrc: ./targets.mind;"
              vr-mode-ui="enabled: false"
              device-orientation-permission-ui="enabled: false">
@@ -254,7 +256,7 @@ AFRAME.registerComponent("planet-interaction", {
         <!-- Sol -->
         <a-gltf-model id="sol" src="#sun" position="0 0 -0.1" scale="0.006 0.006 0.006"></a-gltf-model>
 
-        <!-- Órbitas -->
+        <!-- Órbitas --> <!-- Guia para el posicionamiento de planetas -->
         <a-torus radius="0.30" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
         <a-torus radius="0.38" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
         <a-torus radius="0.47" radius-tubular="0.001" rotation="90 0 0" color="#FFFFFF"></a-torus>
